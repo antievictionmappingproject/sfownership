@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" type="image/x-icon" href="thumbnail.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            font-weight: lighter;
+
+        }
+
+        #buttons{
+            position:fixed;
+            z-index: 3;
+            font-family: sans-serif;
+            display: flex;
+            justify-content:right;
+            flex-direction: row;
+            width: 100%;
+            font-size: clamp(10.6px, 1.8vw, 16px);
+            font-weight: lighter;
+        }
+
+        #page {
+            text-align: left;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border: 1px solid black;
+            color: black;
+            z-index: 4;
+            font-size: clamp(10.65px, 1.8vw, 16px);
+
+        }
+
+        #page:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        #about, #methodology, #aemp {
+            text-align: right;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            border: 1px solid black;
+            color: black;
+
+        }
+        #about:hover{
+          background-color:black;
+          color: white;
+        }
+
+        #aemp:hover{
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #methodology:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #intro {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 25px;
+            width: 80vw;
+            height: 80vh;
+            position: absolute;
+            z-index: 2;
+            text-decoration: solid;
+        }
+
+    </style>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.2/dist/patternomaly.min.js"></script>    
+</head>
+<body>
+
+    <div id="page">
+        <a href="index.html">San Francisco Residential Housing Ownership Map</a>
+      </div>
+
+    <div id="buttons">
+        <a href="methodology.html"><p id="methodology">Methodology</p></a>
+        <a href="findings.html"><p id="methodology">Findings</p></a>
+        <a href="about.html" style="text-decoration: none;"><p id="about">About this Platform</p></a>
+        <a href="https://antievictionmap.com" target="_blank"><p id="aemp">AEMP</p></a>
+    </div>
+
+    <div id="intro">
+        <h1>About this Platform</h1>
+        <p>To obscure ownership and limit liability, corporate landlords frequently create multiple shell companies for every batch of properties they acquire. This platform visualizes the makeup of ownership for residential buildings in San Francisco through capturing data, such as owner location, unit count, and network size. Built on parcel-level data, the project reveals how housing in the city is distributed across different types of owners — <em>individuals, corporations, and real estate trusts </em>— and how ownership scale and absentee ownership shape access to and control over housing. This tool is intended to highlight critical dynamics at the heart of San Francisco's renter's rights: corporate versus mom-and-pop consolidation of housing stock, uneven distribution of housing units, and out-of-town ownership.</p>
+        <p>Explore the <a href="methodology.html" style="text-decoration-style: solid; text-decoration-line: underline;">Methodology</a> tab to see how the data was classified.
+    </p>
+        <div id="layers"><h1>Layers</h1>
+            <div id="Owner Type"> 
+                <h2>Owner Type</h2>
+                <p>Owner Type allows you to toggle between different types of owners in San Francisco: <em>Corporate, Real Estate Trust, Individual, and Public. </em>
+                </p>
+            </div>
+            <div id="Owner Location"> 
+                <h2>View In-SF Owners Only</h2>
+                <p><em>Note: The map displays parcels which contain relevant data on the owner’s mailing address. Rows missing this data were removed. </em><br>View In-SF Owners Only displays parcels whose owner’s mailing address is within San Francisco County. 
+                </p>
+            </div>
+            <div id="ViewByBuilding"> 
+                <h2>View By Parcel Size
+                </h2>
+                <p><em>Note: The map displays the owner of a parcel in San Francisco which may contain multiple units. </em><br>View By Parcel Size allows users to view the number of units per parcel, reflected through the building height. This is not intended to display the <em>actual</em> height of the building. Approximately 1 unit is displayed as 1m of height. Adjust the view using Ctrl + Click.
+                </p>
+            </div>
+        </div>
+        <div id="piecharts"><h1>Charts</h1>
+            <div id="OwnerChart">
+                <h2>Owner Type</h2>
+                <p>Owner types are proportionally displayed the number of units per owner type. The chart updates with View In-SF Owners Only selection.
+                </p>
+            </div>
+            <div id="networksize">
+                <h2>Network Size</h2>
+                <p>Owner property networks are classified into three categories—Small, Medium, and Large—using a graduated color scale from light to dark to denote increasing size. The bottom pie chart displays the number of units owned by each owner who fall into each classification and updates with View By Owner Location selection.
+            </div>
+        </div>
+        <br>
+
+        <div id="whomadethis">
+          <h1>Who is AEMP?</h1>
+          <p>This platform was developed and is maintained by the <a href="https://antievictionmap.com" target="_blank" style="text-decoration-line: underline;">Anti-Eviction Mapping Project.</a> More data on property ownership networks and evictions in San Francisco and the greater Bay Area can be browsed through <a href="https://evictorbook.com" target="_blank"style="text-decoration-line: underline;"> Evictorbook</a> , a tool developed by AEMP to research the webs of corporate property ownership. 
+      </p>
+      <br>
+      </div>
+      
+        <div id="disclaimer">
+          <h1>Disclaimer</h1>
+          <p>The information on this website is provided “as is,” “as available,” and “with all faults.” Your access to, any reliance upon, and/or use of the information is at your sole risk. To the fullest extent permissible by law, Mapping Action Collective and Anti-Eviction Mapping Project hereby disclaim all express or implied warranties of any kind including but not limited to accuracy and non-infringement, and make no representations, warranties, endorsements, or promises, express or implied, in connection with, or otherwise directly or indirectly related to, the information provided on this website. Under no circumstances shall Mapping Action Collective or Anti-Eviction Mapping Project or its members, employees, volunteers, and affiliates be liable for any indirect, incidental, punitive, special, or consequential damages (including but not limited to damages from personal injury and/or death, lost revenues or profits, loss of business or loss of data) that are directly or indirectly related to the use of the website.
+            <br><br>The information on this website does not constitute legal advice and must not be used as a substitute for the advice of a lawyer qualified to give advice on legal issues pertaining to housing. We can help direct you to free legal services if necessary.
+            <br><br>We at the Mapping Action Collective and Anti-Eviction Mapping Project do not condone any violent, harassing, threatening, or destructive behavior directed at landlords, their families, their associates, or their property, or at anyone else. Rather, we encourage our website users to conduct themselves peacefully and responsibly at all times.</p>
+        </div>
+        <br>
+      <div id="feedback">
+        <h1>Feedback</h1>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScnpUNIV3Pr5y9YXF59OqBFY6wzDHaHrsvFQsno8e9CR1cuew/viewform?embedded=true" width="640" height="732" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
+
+        <br><br><br>
+        <br><br><br>
+    </div>
+
+</body>
+<script>
+
+    const barchart1 = document.getElementById('owner-type').getContext('2d');
+    const barchart2 = document.getElementById('owner-location').getContext('2d');
+    const barchart3 = document.getElementById('owner-size').getContext('2d');
+    const barchart4 = document.getElementById('owner-location-by-type').getContext('2d');
+    const barchart5 = document.getElementById('owner-size-by-type').getContext('2d');
+    
+    
+    
+    
+       const ownertypechart = new Chart(barchart1, {
+      type: 'bar',
+      data: {
+        labels: ['Individual','Real Estate Trust', 'Corporate', 'Public'],
+        datasets: [{
+          backgroundColor: ['pink', 'green', 'blue', 'yellow'],
+          borderColor: ['gray'],
+          data: [193618, 108847, 101772, 4220]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Type'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownerlocationchart = new Chart(barchart2, {
+      type: 'bar',
+      data: {
+        labels: ['In SF', 'Out of SF'],
+        datasets: [{
+          backgroundColor: [  pattern.draw('diagonal', 'gray'),
+                                pattern.draw('cross', 'gray')],
+          borderColor: ['black'],
+          borderWidth: 1,
+          data: [303339, 102059]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Location'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownersizechart = new Chart(barchart3, {
+      type: 'bar',
+      data: {
+        labels: ['Small (1-4 units)', 'Medium (5-14 units)', 'Large (>15 units)'],
+        datasets: [{
+          backgroundColor: [  pattern.draw('zigzag-horizontal', 'gray'),
+                                pattern.draw('dash', 'gray'),
+                                pattern.draw('dot', 'gray')],
+          borderColor: ['black'],
+          borderWidth: 1,
+          data: [174440, 31282, 202735 ]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Size'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownerlocationtypechart = new Chart(barchart4, {
+      type: 'bar',
+      data: {
+        labels: ['Individual', 'Real Estate Trust', 'Corporate'],
+        datasets: [
+        {
+            label: 'In SF',
+            backgroundColor: [
+              pattern.draw('diagonal', 'pink'),
+              pattern.draw('diagonal', 'green'),
+              pattern.draw('diagonal', 'blue')
+            ],
+            data: [153843, 79174, 66600]
+          },
+          {
+            label: 'Out of SF',
+            backgroundColor: [
+              pattern.draw('cross', 'pink'),
+              pattern.draw('cross', 'green'),
+              pattern.draw('cross', 'blue')
+            ],
+            data: [37940, 29537, 34084]
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Owner Location'
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Units'
+            }
+          }
+        }
+      }
+    });
+    
+    
+    const ownersizetypechart = new Chart(barchart5, {
+      type: 'bar',
+      data: {
+        labels: ['Individual', 'Real Estate Trust', 'Corporate'],
+        datasets: [
+          {
+            label: 'Small (1-4 units)',
+            backgroundColor: [
+              pattern.draw('zigzag-horizontal', 'pink'),
+              pattern.draw('zigzag-horizontal', 'green'),
+              pattern.draw('zigzag-horizontal', 'blue')
+            ],
+            data: [107586, 60983, 5867]
+          },
+          {
+            label: 'Medium (5-14 units)',
+            backgroundColor: [
+              pattern.draw('dash', 'pink'),
+              pattern.draw('dash', 'green'),
+              pattern.draw('dash', 'blue')
+            ],
+            data: [12839, 12531, 5912]
+          },
+          {
+            label: 'Large (>15 units)',
+            backgroundColor: [
+              pattern.draw('dot', 'pink'),
+              pattern.draw('dot', 'green'),
+              pattern.draw('dot', 'blue')
+            ],
+            data: [73193, 35333, 89993]
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Owner Type'
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Units'
+            }
+          }
+        }
+      }
+    });
+    
+    
+    </script>
+</html>
+
+
+

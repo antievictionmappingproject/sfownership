@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" type="image/x-icon" href="thumbnail.png">
+  <title>SF Ownership Map</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.css" rel="stylesheet">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.12.0/mapbox-gl.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body { margin: 0; padding: 0;             font-family: sans-serif;
+      font-weight: lighter;
+
+    }
+    #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    .menu {
+      position: absolute;
+      background-color: rgb(255, 255, 255, 0.9);
+      padding: 10px;
+      font-family: sans-serif;
+      font-weight: lighter;
+      top: 50px;
+      left: 10px;
+      z-index: 1;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      border-color: black;
+      border-style: solid;
+      border-width: 1px;
+      width: 120px;
+      backdrop-filter: blur(3px);
+
+    }
+    .menu:hover{
+      background-color: black;
+      color: white;
+
+    }
+    a{
+      text-decoration: none;
+      color: black;
+    }
+    #buttons{
+            position:fixed;
+            z-index: 2;
+            font-family: sans-serif;
+            display: flex;
+            justify-content:right;
+            flex-direction: row;
+            width: 100%;
+            font-size: clamp(10.6px, 1.8vw, 16px);
+
+    }
+        #page {
+            text-align: left;
+            background-color: rgba(255, 255, 255, 0.806);
+            padding: 10px 10px;
+            margin: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border: 1px solid black;
+            z-index: 3;
+            text-decoration: none;
+            font-size: clamp(10.65px, 1.8vw, 16px);
+            backdrop-filter: blur(3px);
+
+        }
+
+        #page:hover {
+            background-color: black;
+        }
+
+        #page a:hover{
+          color: white;
+
+
+        }
+
+        #about{
+            text-align: right;
+            background-color: rgba(255, 255, 255, 0.806);
+            padding: 10px 10px;
+            margin:0;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            color: black;
+            backdrop-filter: blur(3px);
+
+        }
+        #about:hover{
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+        #methodology{
+            text-align: right;
+            background-color: rgba(255, 255, 255, 0.806);
+            padding: 10px 10px;
+            margin:0;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            backdrop-filter: blur(3px);
+
+        }
+        #methodology:hover{
+          background-color:rgba(230, 240, 185, 0.728);
+        }
+        #aemp{
+            text-align: right;
+            background-color: rgba(255, 255, 255, 0.806);
+            padding: 10px 10px;
+            margin:0;
+            border-color: black;
+            border-style: solid;
+            border-width: 1px;
+            backdrop-filter: blur(3px);
+
+        }
+        #aemp:hover{
+          background-color: rgba(230, 240, 185, 0.728);
+
+        }
+        #intro{
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 25px 25px;
+            width: 80vw;
+            height: 80vh;
+            position:fixed;
+            background-color: #fafafa;
+            opacity: 80%;
+            z-index: 2;
+            font-family: sans-serif;
+            font-weight: lighter;
+
+        }
+
+
+        h5{
+            text-align: center;
+            font-size: 12pt;
+            font-weight: 200;
+        }
+
+        .close{
+            color: rgb(0, 0, 0, 0.9);
+            font-size: 12pt;
+            font-family: sans-serif;
+            font-weight: 100;
+            z-index: 4;
+        }
+
+        #story{
+          position: absolute;
+          background-color: rgb(255, 255, 255, 0.9);
+          backdrop-filter: blur(3px);
+      padding: 10px;
+      font-family: sans-serif;
+      font-weight: lighter;
+
+      top: 50px;
+      right: 10px;
+      z-index: 1;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      width: 300px;
+      border-color: black;
+          border-style: solid;
+          border-width: 1px;
+
+        }
+
+        #pieChart{
+          right: 10%;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          background-color: rgb(255, 255, 255, 0.9);
+          border-color: black;
+          border-style: solid;
+          border-width: 1px;
+          padding: 10px;
+          border-radius: 2px;
+          backdrop-filter: blur(3px);
+          }
+
+          #pieChart1{
+          right: 10%;
+          box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+          background-color: rgb(255, 255, 255, 0.9);
+          border-color: black;
+          border-style: solid;
+          border-width: 1px;
+          padding: 10px;
+          border-radius: 2px;
+          backdrop-filter: blur(3px);
+          }
+
+          #extrude-controls{
+            top: 120px;
+
+          }
+
+          #owner-location-controls{
+            top: 50px;
+          }
+
+          label{
+            font-family: sans-serif;
+            font-weight: lighter;
+
+          }
+
+          #owner-checkboxes {
+            display: block;
+
+          }
+
+          canvas {
+  cursor: grab;
+}
+
+canvas:active {
+  cursor: grabbing;
+}
+
+#welcome-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background-color: rgba(218, 218, 218, 0.546);
+  backdrop-filter: blur(7px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99;
+}
+
+#welcome-content {
+  font-size: 16px;
+  background-color: rgba(230, 240, 185, 0.8);
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 50px;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0px 0px 44px rgba(131, 151, 227, 0.518);
+  position: relative;
+  font-family: sans-serif;
+  font-weight: lighter;
+  text-align: center;
+  border-style: solid;
+  border-width: 1px;
+  border-color: rgba(255, 255, 255, 0.097);
+  color: rgb(2, 2, 153);
+
+}
+
+#welcome-content a{
+  color: rgb(2, 2, 153);
+  text-decoration-style: dotted;  
+  text-decoration-line: underline;
+}
+
+#welcome-close {
+  position: absolute;
+  padding: 2px;
+  border-radius: 10px;
+  border-color: rgb(139, 138, 138);
+  right: 37%;
+  width: 100px;
+  font-size: 14px;
+  cursor: pointer;
+  border-style: solid;
+  border-width: 1px;
+}
+
+#welcome-close:hover {
+  color: rgb(241, 251, 206);
+  background-color: rgba(1, 28, 145);;
+}
+
+.view-note {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      background-color: rgba(230, 240, 185, 0.728);
+      color: blue;
+      padding: 15px;
+      border-radius: 10px;
+      opacity: 0.9;
+      z-index: 1000;
+      font-family: sans-serif;
+      font-size: 14px;
+      transition: opacity 1s ease;
+    }
+
+    .fade-out {
+      opacity: 0;
+    }
+    
+
+  </style>
+</head>
+<body>
+
+<div id="map">
+  <div id="welcome-popup">
+    <div id="welcome-content">
+      <p>This platform visualizes the makeup of ownership for residential buildings in San Francisco through capturing data, such as owner location, unit count, and network size. 
+        <br><br><strong>If you're interested in learning about ownership networks, check out <a href="https://evictorbook.com" target="_blank"> Evictorbook</a></strong>.
+      </p>
+      <span id="welcome-close">Enter</span>
+    </div>
+  </div>
+  
+</div>
+<div id="ownerChart">
+  <canvas id="pieChart" width="250px" height="250px" style="position: absolute;width: 200px; height: 200px; top: 270px; right: 10px;">hi</canvas>
+</div>
+<div id="sizeChart">
+  <canvas id="pieChart1" width="250px" height="250px" style="position: absolute;width: 200px; height: 200px; top: 480px; right: 10px;">hi</canvas>
+</div>
+<div class="menu" id="layer-controls" style="background-color: black; color: white; top: 190px;">
+  <div id="owner-toggle-header" style="cursor: pointer; ">Owner Types &#x25BC;</div>
+  <div id="owner-checkboxes">
+  </div>
+</div>
+
+<div class="menu" id="owner-location-controls">
+  <div id="ownerlocation-checkboxes">
+    <input type="checkbox" id="ownerLocationToggle" style="display: none;">
+    <label for="ownerLocationToggle" style="cursor: pointer; ">View In-SF Owners Only</label>
+  </div>
+</div>
+
+<div class="menu" id="extrude-controls">
+  <input type="checkbox" id="extrusionToggle" style="display: none;">
+  <label for="extrusionToggle" style="cursor: pointer;">View by Parcel Size</label>
+</div>
+
+
+
+
+<div id="page">
+  <a href="index.html">San Francisco Residential Housing Ownership Map</a>
+</div>
+
+<div id="buttons">
+  <a href="methodology.html"><p id="methodology">Methodology</p></a>
+  <a href="findings.html"><p id="methodology">Findings</p></a>
+  <a href="about.html" style="text-decoration: none;"><p id="about">About this Platform</p></a>
+  <a href="https://antievictionmap.com" target="_blank"><p id="aemp">AEMP</p></a>
+</div>
+<div id="story"></div>
+
+
+<script>
+  let checkbox
+  let controlledLayerIds = [];
+  const ctx = document.getElementById('pieChart').getContext('2d');
+  const ctx1 = document.getElementById('pieChart1').getContext('2d');
+  const summaryBox = document.getElementById("story");
+
+  const groupedLayers = [
+    { label: 'Corporate', layers: ['corporate-layer','corporate-layer1'], info: '101772', infobylocation: '66600', location: '59.1', color: 'blue' },
+    { label: 'Real Estate Trust', layers: ['trust-layer', 'trust-layer1'],info: '108847',infobylocation: '79174', location:'80.2',color: 'green' },
+    { label: 'Public', layers: ['public-layer', 'public-layer1'], info: '4220',color: 'yellow'  },
+    { label: 'Individual', layers: ['individual-layer', 'individual-layer1'], info:'193618', infobylocation: '153843',location: '86.3',color: 'pink'  }
+  ];
+
+  const OWNER_TYPE_LABELS = ['Corporate', 'Real Estate Trust', 'Public', 'Individual'];
+  const OWNER_TYPE_COLORS = {
+    'Corporate': 'blue',
+    'Real Estate Trust': 'green',
+    'Public': 'yellow',
+    'Individual': 'pink'
+  };
+
+  const OWNER_LABEL_TO_KEY = {
+  'Corporate': 'CORPORATE',
+  'Real Estate Trust': 'TRUST',
+  'Public': 'PUBLIC',
+  'Individual': 'INDIVIDUAL'
+};
+
+//Welcome popup
+document.addEventListener('DOMContentLoaded', () => {
+  const popup = document.getElementById("welcome-popup");
+  const closeBtn = document.getElementById("welcome-close");
+
+  closeBtn.addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+
+});
+
+
+//Initialize map
+  mapboxgl.accessToken = 'pk.eyJ1IjoiYW50aWV2aWN0aW9ubWFwIiwiYSI6ImNrazF6dWs2ZzA2OHQyd251eGxoc2IyYzQifQ.lQbeWzEMZhhvSNpsbo34wQ';
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/antievictionmap/cmcv5twgc006u01rf0cxs8iub',
+    center: [-122.45301, 37.76951], 
+    zoom: 11.5,
+    minZoom: 11,  
+    maxZoom: 14 
+  });
+
+  map.on('load', () => {
+    map.addSource('ownership1', {
+    type: 'vector',
+    url: 'mapbox://antievictionmap.1f4jdhrr'
+  });
+
+  map.addSource('ownership2', {
+    type: 'vector',
+    url: 'mapbox://antievictionmap.1u8ohren'
+  });
+
+  
+  addGroupedLayerControls(groupedLayers);
+
+
+// Add layers and filter by owner type
+  map.addLayer({
+    id: 'corporate-layer',
+    type: 'fill',
+    source: 'ownership1',
+    'source-layer': 'cleaned_sfownershipdata_100000_175569', 
+    paint: {
+      'fill-color': 'blue',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+    },
+    filter: ['==', ['get', 'owner_type'], 'CORPORATE_OWNER']
+  });
+
+  map.addLayer({
+    id: 'corporate-layer1',
+    type: 'fill',
+    source: 'ownership2',
+    'source-layer': 'cleaned_sfownershipdata_100000', 
+    paint: {
+      'fill-color': 'blue',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'CORPORATE_OWNER']
+  });
+  map.addLayer({
+    id: 'trust-layer',
+    type: 'fill',
+    source: 'ownership1',
+    'source-layer': 'cleaned_sfownershipdata_100000_175569', 
+    paint: {
+      'fill-color': 'green',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'TRUST_OWNER']
+  });
+
+  map.addLayer({
+    id: 'trust-layer1',
+    type: 'fill',
+    source: 'ownership2',
+    'source-layer': 'cleaned_sfownershipdata_100000', 
+    paint: {
+      'fill-color': 'green',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'TRUST_OWNER']
+  });
+  
+  map.addLayer({
+    id: 'individual-layer',
+    type: 'fill',
+    source: 'ownership1',
+    'source-layer': 'cleaned_sfownershipdata_100000_175569', 
+    paint: {
+      'fill-color': 'pink',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'INDIVIDUAL_OWNER']
+  });
+  map.addLayer({
+    id: 'individual-layer1',
+    type: 'fill',
+    source: 'ownership2',
+    'source-layer': 'cleaned_sfownershipdata_100000',
+    paint: {
+      'fill-color': 'pink',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'INDIVIDUAL_OWNER']
+  });
+  map.addLayer({
+    id: 'public-layer',
+    type: 'fill',
+    source: 'ownership1',
+    'source-layer': 'cleaned_sfownershipdata_100000_175569', 
+    paint: {
+      'fill-color': 'yellow',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'PUBLIC_OWNER']
+  });
+  map.addLayer({
+    id: 'public-layer1',
+    type: 'fill',
+    source: 'ownership2',
+    'source-layer': 'cleaned_sfownershipdata_100000', 
+    paint: {
+      'fill-color': 'yellow',
+      'fill-opacity': 0.8,
+      'fill-outline-color': 'gray'
+
+    },
+    filter: ['==', ['get', 'owner_type'], 'PUBLIC_OWNER']
+  });
+  groupedLayers.forEach(group => {
+    const checkbox = document.getElementById(group.label);
+    if (checkbox && checkbox.checked) {
+      controlledLayerIds.push(...group.layers);
+    }
+  });
+
+  const popup = new mapboxgl.Popup({
+  closeButton: false,
+  closeOnClick: false
+});
+
+// Tooltip logic on hover — show when in extrusion mode only
+map.on('mousemove', (e) => {
+  if (!document.getElementById('extrusionToggle').checked) {
+    popup.remove(); // hide popup if not in extrusion mode
+    return;
+  }
+
+  const features = map.queryRenderedFeatures(e.point, {
+    layers: controlledLayerIds.filter(id => map.getLayer(id)) // active layers only
+  });
+
+  if (features.length > 0) {
+    const feature = features[0];
+    const locationtype = feature.properties.owner_in_sf;
+    const name = feature.properties.owner;
+    const owner = feature.properties.owner_type;
+    const units = feature.properties.numunits;
+    const networkunits = feature.properties.num_units_in_network;
+    const size = feature.properties.owner_size || "Unknown Size";
+    const addr = feature.properties.address || "No Address";
+
+    popup
+      .setLngLat(e.lngLat)
+      .setHTML(`<strong>${addr}</strong><br> Owner type: ${owner}<br>Owner size: ${size}<br>Owner location: ${locationtype}<br> Total units in network: ${networkunits} units`)
+      .addTo(map);
+  } else {
+    popup.remove();
+  }
+});
+
+
+  map.once('idle', () => {
+  setTimeout(() => {
+    updatePieChartFromMapData();
+  }, 500);
+});
+
+//Owner Location in SF function
+function applyOwnerLocationFilter(inSfOnly) {
+  const allLayers = [
+    'corporate-layer', 'corporate-layer1',
+    'trust-layer', 'trust-layer1',
+    'public-layer', 'public-layer1',
+    'individual-layer', 'individual-layer1'
+  ];
+
+  allLayers.forEach(layerId => {
+    if (map.getLayer(layerId)) {
+      const baseFilter = ['==', ['get', 'owner_type'], getOwnerTypeFromLayer(layerId)];
+
+      const filter = inSfOnly
+        ? ['all', baseFilter, ['==', ['get', 'owner_in_sf'], 'IN_SF']]
+        : baseFilter;
+
+      map.setFilter(layerId, filter);
+
+    }
+  });
+}
+
+//Owner Type function
+function getOwnerTypeFromLayer(layerId) {
+  if (layerId.includes('corporate')) return 'CORPORATE_OWNER';
+  if (layerId.includes('trust')) return 'TRUST_OWNER';
+  if (layerId.includes('public')) return 'PUBLIC_OWNER';
+  if (layerId.includes('individual')) return 'INDIVIDUAL_OWNER';
+}
+
+//View By Parcel Size function
+document.getElementById('ownerLocationToggle').addEventListener('change', function (e) {
+  applyOwnerLocationFilter(e.target.checked);
+  updateSummary(groupedLayers);
+
+  setTimeout(() => {
+    updatePieChartFromMapData(); // Optional: refresh your charts
+  }, 350);
+});
+
+  });
+
+ 
+
+  document.getElementById('extrusionToggle').addEventListener('change', function (e) {
+  const useExtrusion = e.target.checked;
+
+  if (useExtrusion) {
+    const popup = document.createElement('div');
+  popup.className = 'view-note';
+  popup.textContent = 'Parcel heights reflect the NUMBER OF UNITS';
+
+  // Add to body
+  document.body.appendChild(popup);
+
+  setTimeout(() => {
+    popup.classList.add('fade-out');
+  }, 4000); // start fading 1 second before removal
+
+  // Remove element after 5 seconds
+  setTimeout(() => {
+    popup.remove();
+  }, 5000);
+
+    const ownerLocation = document.getElementById("ownerLocationToggle");
+    ownerLocation.checked = false;
+    ownerLocation.dispatchEvent(new Event('change')); 
+    groupedLayers.forEach(group => {
+      const checkbox = document.getElementById(group.label.toLowerCase());
+      if (checkbox && !checkbox.checked) {
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new Event('change')); // Triggers visibility + updates
+      }
+    });
+  }
+
+  if (!useExtrusion) {
+    const ownerLocation = document.getElementById("ownerLocationToggle");
+    ownerLocation.checked = false;
+    ownerLocation.dispatchEvent(new Event('change')); 
+  groupedLayers.forEach(group => {
+    const checkbox = document.getElementById(group.label);
+    if (checkbox && !checkbox.checked) {
+      checkbox.checked = true;
+
+      // Show all layers in the group
+      group.layers.forEach(layerId => {
+        if (map.getLayer(layerId)) {
+          map.setLayoutProperty(layerId, 'visibility', 'visible');
+        }
+
+        // Add to controlledLayerIds if not present
+        if (!controlledLayerIds.includes(layerId)) {
+          controlledLayerIds.push(layerId);
+        }
+      });
+    }
+  });
+
+  updateSummary(groupedLayers);
+  setTimeout(updatePieChartFromMapData, 350);
+}
+
+  map.flyTo({
+    center: [-122.45301, 37.76951],
+    zoom: useExtrusion ? 13.5 : 11.5,
+    pitch: useExtrusion ? 90 : 0,
+    bearing: 0,
+    curve: useExtrusion ? 1 : 1.42, // 1 is linear, higher values ease in/out
+    speed: 0.5, // Optional: Controls the duration (lower = slower)
+    essential: true
+  });
+
+  const layerTypes = {
+    'corporate-layer': 'CORPORATE_OWNER',
+    'corporate-layer1': 'CORPORATE_OWNER',
+    'trust-layer': 'TRUST_OWNER',
+    'trust-layer1': 'TRUST_OWNER',
+    'public-layer': 'PUBLIC_OWNER',
+    'public-layer1': 'PUBLIC_OWNER',
+    'individual-layer': 'INDIVIDUAL_OWNER',
+    'individual-layer1': 'INDIVIDUAL_OWNER'
+  };
+
+  for (const [layerId, ownerType] of Object.entries(layerTypes)) {
+    if (map.getLayer(layerId)) {
+      map.removeLayer(layerId);
+    }
+
+    const isLayer1 = layerId.includes('1');
+    const source = isLayer1 ? 'ownership1' : 'ownership2';
+    const sourceLayer = isLayer1 ? 'cleaned_sfownershipdata_100000_175569' : 'cleaned_sfownershipdata_100000';
+    
+    map.addLayer({
+      id: layerId,
+      type: useExtrusion ? 'fill-extrusion' : 'fill',
+      source: source,
+      'source-layer': sourceLayer,
+      paint: useExtrusion
+        ? {
+            'fill-extrusion-color': getColor(ownerType),
+            'fill-extrusion-opacity': 0.9,
+            'fill-outline-color': 'gray',
+            'fill-extrusion-height': [
+              "interpolate",
+              ["linear"],
+              ["get", "numunits"],
+              1,
+              1,
+              540,
+              540
+            ]
+          }
+        : {
+            'fill-color': getColor(ownerType),
+            'fill-opacity': 1,
+            'fill-outline-color': 'gray',
+
+          },
+      filter: ['==', ['get', 'owner_type'], ownerType]
+    });
+  }
+
+  setTimeout(() => updatePieChartFromMapData(), 350);
+});
+
+
+
+
+function getColor(ownerType) {
+  if (ownerType === 'CORPORATE_OWNER') return 'blue';
+  if (ownerType === 'TRUST_OWNER') return 'green';
+  if (ownerType === 'INDIVIDUAL_OWNER') return 'pink';
+  if (ownerType === 'PUBLIC_OWNER') return 'yellow';
+  return 'gray';
+}
+
+
+//Pie Chart Initialize
+const chart = new Chart(ctx, {
+  type: 'doughnut',
+  data: {
+    labels: OWNER_TYPE_LABELS,
+    datasets: [{
+      backgroundColor: OWNER_TYPE_LABELS.map(l => OWNER_TYPE_COLORS[l]),
+      borderColor: ['gray'],
+      data: [0, 0, 0, 0]
+    }]
+  },
+  options: {
+    responsive: false
+  }
+});
+
+
+const chart1 = new Chart(ctx1, {
+  type: 'pie',
+  data: {
+    labels: [],
+    datasets: [{
+        backgroundColor:['lightgray', 'gray', 'darkgray'],
+        data: [0,0,0]
+    },
+    {
+        backgroundColor:['blue', 'green', 'gray'],
+        data: [0,0,0]
+    },
+    {
+        backgroundColor:['blue', 'yellow', 'gray'],
+        data: [0,0,0]
+    },
+    {
+        backgroundColor:['orange', 'yellow', 'brown'],
+        data: [0,0,0]
+    }]
+  },
+  options: {
+    responsive: false // Tell Chart.js not to override canvas size
+  }
+});
+
+
+
+
+//Update Pie Chart function
+function updatePieChartFromMapData() {
+  
+const inSfOnly = document.getElementById("ownerLocationToggle").checked;
+
+let unitCounts = inSfOnly ? {
+  CORPORATE: 69760,
+  TRUST: 79172,
+  PUBLIC :4695,
+  INDIVIDUAL: 150213
+} : {
+  CORPORATE: 105506,
+  TRUST: 109043,
+  PUBLIC :4695,
+  INDIVIDUAL: 189213
+};
+
+let ownersizeCounts = inSfOnly ? {
+  CORPORATESMALL: 2799,
+  CORPORATEMED: 2848,
+  CORPORATELG: 60953,
+  TRUSTSMALL: 47936,
+  TRUSTMED: 8499,
+  TRUSTLARGE: 22738,
+  INDVIDUALSMALL:92551,
+  INDIVIDUALMED:8940,
+  INDIVIDUALLG:52352
+} : {
+  CORPORATESMALL: 5954,
+  CORPORATEMED: 6054,
+  CORPORATELG: 93497,
+  TRUSTSMALL: 60982,
+  TRUSTMED: 12531,
+  TRUSTLARGE: 35330,
+  INDVIDUALSMALL: 107498,
+  INDIVIDUALMED:12698,
+  INDIVIDUALLG:69018
+};
+
+const seenNetworkIds = new Set();
+const visibleFeatures = map.queryRenderedFeatures({layers: controlledLayerIds});
+
+
+  visibleFeatures.forEach(feature => {
+    const type = feature.properties.owner_type;
+    const units = parseInt(feature.properties.numunits) || 0;
+
+    const size = feature.properties.owner_size;
+ 
+
+  const networkId = feature.properties.network_id;
+
+  
+});
+
+  // Prepare Chart.js data
+  const activeOwnerTypes = new Set();
+
+controlledLayerIds.forEach(layerId => {
+  if (layerId.includes("corporate")) activeOwnerTypes.add("CORPORATE");
+  if (layerId.includes("trust")) activeOwnerTypes.add("TRUST");
+  if (layerId.includes("individual")) activeOwnerTypes.add("INDIVIDUAL");
+  if (layerId.includes("public")) activeOwnerTypes.add("PUBLIC");
+
+});
+
+const labels = [];
+const data = [];
+
+OWNER_TYPE_LABELS.forEach(label => {
+  const key = OWNER_LABEL_TO_KEY[label];
+  labels.push(label);
+  if (activeOwnerTypes.has(key)) {
+    data.push(unitCounts[key]);
+  } else {
+    data.push(0);
+  }
+});
+
+
+  chart.data.labels = labels;
+  chart.data.datasets[0].data = data;
+  chart.update();
+
+  const selectedTypes = [...activeOwnerTypes];
+
+const newDatasets = [];
+
+if (selectedTypes.length === 0) {
+  // Show overall if nothing is selected
+  newDatasets.push({
+    label: "OVERALL",
+    backgroundColor: ['lightgray', 'gray', 'darkgray'],
+    data: [
+      ownersizeCounts.TRUSTSMALL + ownersizeCounts.CORPORATESMALL + ownersizeCounts.INDVIDUALSMALL,
+      ownersizeCounts.TRUSTMED + ownersizeCounts.CORPORATEMED + ownersizeCounts.INDIVIDUALMED,
+      ownersizeCounts.TRUSTLARGE + ownersizeCounts.CORPORATELG + ownersizeCounts.INDIVIDUALLG
+    ]
+  });
+} else {
+  if (selectedTypes.includes("INDIVIDUAL")) {
+    newDatasets.push({
+      label: "INDIVIDUAL",
+      backgroundColor: ['#f5e1ea', 'pink', '#f261a2'],
+      borderColor: ['gray'],
+      data: [
+        ownersizeCounts.INDVIDUALSMALL,
+        ownersizeCounts.INDIVIDUALMED,
+        ownersizeCounts.INDIVIDUALLG
+      ]
+    });
+  }
+
+  if (selectedTypes.includes("TRUST")) {
+    newDatasets.push({
+      label: "TRUST",
+      backgroundColor: ['lightgreen', '#64B461', 'darkgreen'],
+      borderColor: ['gray'],
+      data: [
+        ownersizeCounts.TRUSTSMALL,
+        ownersizeCounts.TRUSTMED,
+        ownersizeCounts.TRUSTLARGE
+      ]
+    });
+  }
+
+  if (selectedTypes.includes("CORPORATE")) {
+    newDatasets.push({
+      label: "CORPORATE",
+      backgroundColor: ['lightblue', 'blue', 'darkblue'],
+      borderColor: ['gray'],
+      data: [
+        ownersizeCounts.CORPORATESMALL,
+        ownersizeCounts.CORPORATEMED,
+        ownersizeCounts.CORPORATELG
+      ]
+    });
+  }
+
+  if (selectedTypes.includes("PUBLIC")) {
+    newDatasets.push({
+      label: "PUBLIC",
+      backgroundColor: ['yellow'],
+      data: [126]
+    });
+  }
+}
+
+chart1.data.datasets = newDatasets;
+chart1.data.labels = ['Small', 'Medium', 'Large'];
+chart1.update();
+  
+}
+
+function updateSummary(groups) {
+  const ownerLocationChecked = document.getElementById("ownerLocationToggle").checked;
+
+const checkedGroups = groups.filter(group => {
+  const checkbox = document.getElementById(group.label);
+  const isPublic = group.label.toLowerCase() === 'public';
+  return checkbox && checkbox.checked && (!ownerLocationChecked || !isPublic);
+});
+
+
+  const parts = checkedGroups.map(group => {
+    return `${group.info} units of ${group.label}`;
+  });
+
+  const extraInfo = checkedGroups.map(group => {
+    return `${group.location} % of ${group.label}`;
+  });
+  var locationText = '';
+
+  const summaryBox = document.getElementById("story");
+
+  
+
+  // Check if any owner type checkbox is checked
+  const anyOwnerTypeChecked = groups.some(group => {
+    const checkbox = document.getElementById(group.label);
+    return checkbox && checkbox.checked;
+  });
+
+  if (ownerLocationChecked && checkedGroups) {
+    if(extraInfo.length === 1){
+      locationText = `<br><br><strong>${extraInfo[0]}</strong> owners reside in San Francisco.`;
+    } else {
+      const lastlocation = extraInfo.pop();
+      locationText = `<br><br>${extraInfo.map(p => `<em>${p}</em>`).join(', ')},  and <em>${lastlocation}</em> owners reside in San Francisco.`;
+    }
+  }
+  const ownertypeBox = document.getElementById("layer-controls");
+
+  if (parts.length === 0) {
+    summaryBox.innerHTML = ''; // Clear when nothing is selected
+    ownertypeBox.style.backgroundColor = "white";
+    ownertypeBox.style.color = "black";
+
+  } else if (parts.length === 1) {
+    ownertypeBox.style.backgroundColor = "black";
+    ownertypeBox.style.color = "white";
+    summaryBox.innerHTML = `There are <em>${parts[0]}</em> owned residential housing in San Francisco.` + locationText;
+  } else {
+    const last = parts.pop();
+    summaryBox.innerHTML = `There are ${parts.map(p => `<em>${p}</em>`).join(', ')}, and <em>${last}</em> owned residential housing in San Francisco.` + locationText;
+  }
+}
+
+
+
+  function addGroupedLayerControls(groups) {
+  const menu = document.getElementById('owner-checkboxes');
+  const allLayerIds = [];
+ 
+
+
+  groups.forEach(group => {
+    checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = group.label;
+    checkbox.checked = true;
+
+    const informationBox = document.getElementById("story");
+
+    allLayerIds.push(...group.layers); // Store for return
+
+
+    checkbox.onchange = function () {
+  group.layers.forEach(layerId => {
+    if (map.getLayer(layerId)) {
+      map.setLayoutProperty(layerId, 'visibility', this.checked ? 'visible' : 'none');
+    }
+  });
+
+  if (this.checked) {
+    group.layers.forEach(layerId => {
+      if (!controlledLayerIds.includes(layerId)) {
+        controlledLayerIds.push(layerId);
+      }
+    });
+  } else {
+    controlledLayerIds = controlledLayerIds.filter(layerId => !group.layers.includes(layerId));
+  }
+
+  updateSummary(groups);
+
+  setTimeout(() => {
+    updatePieChartFromMapData();
+  }, 350);
+};
+
+    
+
+    const label = document.createElement('label');
+    label.innerHTML = ' ' + group.label;
+    label.style.color = group.color;
+
+    const br = document.createElement('br');
+    menu.appendChild(checkbox);
+    menu.appendChild(label);
+    menu.appendChild(br);
+  });
+
+  updateSummary(groups);
+
+}
+
+document.getElementById('owner-toggle-header').addEventListener('click', () => {
+  const checkboxSection = document.getElementById('owner-checkboxes');
+  const isVisible = checkboxSection.style.display !== 'none';
+
+  checkboxSection.style.display = isVisible ? 'none' : 'block';
+
+  // Toggle caret
+  document.getElementById('owner-toggle-header').innerHTML = 
+    `Owner Type ${isVisible ? '&#x25B6;' : '&#x25BC;'}`;
+});
+
+document.getElementById('ownerLocationToggle').addEventListener('change', function (e) {
+  const ownerControlBox = document.getElementById('owner-location-controls');
+  if (e.target.checked) {
+    ownerControlBox.style.backgroundColor = 'black';
+    ownerControlBox.style.color = 'white';
+  } else {
+    ownerControlBox.style.backgroundColor = 'white';
+    ownerControlBox.style.color = 'black';
+  }
+});
+
+document.getElementById('extrusionToggle').addEventListener('change', function (e) {
+  const extrusionControlBox = document.getElementById('extrude-controls');
+  if (e.target.checked) {
+    extrusionControlBox.style.backgroundColor = 'black';
+    extrusionControlBox.style.color = 'white';
+  } else {
+    extrusionControlBox.style.backgroundColor = 'white';
+    extrusionControlBox.style.color = 'black';
+
+  }
+});
+
+function makeDraggable(el) {
+  let offsetX = 0, offsetY = 0, isDragging = false;
+
+  el.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    offsetX = e.clientX - el.getBoundingClientRect().left;
+    offsetY = e.clientY - el.getBoundingClientRect().top;
+    el.style.position = 'absolute'; // Ensure it's positioned
+    el.style.zIndex = 1000; 
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    el.style.left = `${e.clientX - offsetX}px`;
+    el.style.top = `${e.clientY - offsetY}px`;
+  });
+
+  document.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+}
+
+makeDraggable(document.getElementById('pieChart'));
+makeDraggable(document.getElementById('pieChart1'));
+
+
+
+</script>
+
+</body>
+</html>

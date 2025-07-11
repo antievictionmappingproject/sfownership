@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" type="image/x-icon" href="thumbnail.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            font-weight: lighter;
+
+        }
+
+        #buttons{
+            position:fixed;
+            z-index: 3;
+            font-family: sans-serif;
+            display: flex;
+            justify-content:right;
+            flex-direction: row;
+            width: 100%;
+            text-decoration: none;
+            text-decoration-line: none;
+            font-size: clamp(10.6px, 1.8vw, 16px);
+
+        }
+
+        #page {
+            text-align: left;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border: 1px solid black;
+            z-index: 4;
+            text-decoration: none;
+            font-size: clamp(10.65px, 1.8vw, 16px);
+
+        }
+
+        #page:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+
+        a{
+            color: inherit;
+        }
+
+        #about, #methodology, #aemp {
+            text-align: right;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            border: 1px solid black;
+            color: black;
+
+
+        }
+        #methodology:hover{
+          background-color:black;
+          color: white;
+        }
+
+        #aemp:hover{
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #about:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #intro {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 25px;
+            width: 80vw;
+            height: 80vh;
+            position: absolute;
+            z-index: 2;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.2/dist/patternomaly.min.js"></script>
+
+</head>
+<body>
+
+    <div id="page">
+        <a href="index.html"style="text-decoration: none;">San Francisco Residential Housing Ownership Map</a>
+    </div>
+
+    <div id="buttons">
+        <a href="methodology.html" style="text-decoration: none;"><p id="methodology">Methodology</p></a>
+        <a href="findings.html" style="text-decoration: none;"><p id="about">Findings</p></a>
+        <a href="about.html" style="text-decoration: none;"><p id="about">About this Platform</p></a>
+        <a href="https://antievictionmap.com" target="_blank" style="text-decoration: none;"><p id="aemp">AEMP</p></a>
+    </div>
+
+    <div id="intro">
+        <h1>Methodology</h1>
+        <p>This platform builds upon the analytical framework developed in prior <a  href="https://antievictionmap.com/reports-new" target="_blank" style="text-decoration: line; text-decoration:dashed; color:black;">Anti-Eviction Mapping Project (AEMP) reports</a> , which have mapped and analyzed corporate ownership of residential rental properties in cities like Concord and Redwood City. While those earlier studies focused specifically on multi-family rental properties, this project expands the scope to include all residential properties in San Francisco.</p>
+        <div id="where">
+            <h1>Where is the data from?</h1>
+            <p>San Francisco County parcel data was purchased through Regrid in February 2025.
+            </p>
+            <br>
+        </div>
+        <div id="where">
+            <h1>How is the data prepared?</h1>
+            <h2>Defining Residential Housing</h2>
+            <p>Residential Housing is defined through the <a href="https://www.planning.org/lbcs/standards/activity/" target="_blank">LBCS code 1100 for Household Activity</a> and filtering out Property Class Codes for vacant lots.
+            </p>
+            <h2>Defining Owner Type</h2>
+            <p>Owner Type classified property owners as Corporations, Real Estate Trusts, or Individuals, through distinguishing terms associated with each category. An owner was categorized if the name included any of the following terms, either surrounded by spaces or appearing at the end of the name:</p>
+            <li>Corporation: "LLC", "CORP", "CORPORATION", "INC", "LIMITED PARTNERSHIP", "LIMITED PTP", "LP", "LLP", "COMPANY", or "CO"</li>
+            <li>Real Estate Trust: "TRUST", "TR", or "TRS"</li>
+            <li>All remaining owners—those whose names did not match any of the above patterns—were classified as Individuals.</li>
+            <h2>Defining Owner Size</h2>
+            <p>Owner sizes are classified using the total number of units in their ownership network into small, medium, and large categories, loosely informed by <a target="_blank" href="https://data.sfgov.org/Housing-and-Buildings/Reference-Assessor-Recorder-Property-Class-Codes/pa56-ek2h/data_preview">property class code definitions</a>:</p>
+            <li>Small: 1-4 units</li>
+            <li>Medium: 5-14 units</li>
+            <li>Large: > 15 units</li>
+            <h2>Defining Owner Locations</h2>
+            <p>Owner locations are classified using the owner’s mailing address to determine if they reside locally within San Francisco County.</p>
+            <h2>Defining Units per Parcels</h2>
+            <p>For parcels with missing unit counts, the parcel’s property class code was used to mask outliers, average valid values, and impute missing unit counts based on class averages. </p>
+            <h2>Creating Networks</h2>
+            <p>Ownership networks are created with <a href="https://igraph.org/r/html/1.3.5/components.html" target="_blank">igraph::components function</a>, with owner names and owner mailing addresses acting as nodes, and nodes are connected by an edge if they are listed together for at least one property.</p>
+            <p>Ownership networks helped inform owner size and were not used in determining the type of owner. For roughly 30,000 units, owners classifed as individual belonged to a greater network of either corporate or trust owners. </p>
+            <h3><em>Note: Rows with missing property address, mailing address, or unit count data were filtered out to create the map. </em></h3>
+            <br>
+        </div>
+        <div id="validate">
+            <h1>How is the data validated?</h1>
+            <h2>Comparing with ACS 2022 </h2>
+            <p>Results were compared against <a target="_blank" href="https://data.census.gov/table/ACSDT1Y2023.B25032?q=Units+and+Stories+in+Structure&g=050XX00US06075"> American Community Survey 2022 B25032</a> to calculate the difference in unit count estimates between Regrid and the ACS. </p>
+            <br>
+        </div>
+    
+        <br><br><br>
+    </div>
+   
+</body>
+
+</html>
+
+

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<head>
+    <link rel="icon" type="image/x-icon" href="thumbnail.png">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            font-weight: lighter;
+
+        }
+
+        #buttons{
+            position:fixed;
+            z-index: 3;
+            font-family: sans-serif;
+            display: flex;
+            justify-content:right;
+            flex-direction: row;
+            width: 100%;
+            font-size: clamp(10.6px, 1.8vw, 16px);
+
+        }
+
+        #page {
+            text-align: left;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border: 1px solid black;
+            color: black;
+            z-index: 4;
+            font-size: clamp(10.65px, 1.8vw, 16px);
+
+        }
+
+        #page:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        #about, #methodology, #aemp, #findings {
+            text-align: right;
+            background-color: white;
+            padding: 10px 10px;
+            margin: 0;
+            border: 1px solid black;
+            color: black;
+
+        }
+
+        #findings:hover{
+          background-color:black;
+          color: white;
+        }
+
+        #about:hover{
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #aemp:hover{
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #methodology:hover {
+            background-color: rgba(230, 240, 185, 0.728);;
+        }
+
+        #intro {
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 25px;
+            width: 80vw;
+            height: 80vh;
+            position: absolute;
+            z-index: 2;
+            text-decoration: solid;
+        }
+
+    </style>
+     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/patternomaly@1.3.2/dist/patternomaly.min.js"></script>    
+</head>
+<body>
+
+    <div id="page">
+        <a href="index.html">San Francisco Residential Housing Ownership Map</a>
+      </div>
+
+    <div id="buttons">
+        <a href="methodology.html"><p id="methodology">Methodology</p></a>
+        <a href="findings.html"><p id="findings">Findings</p></a>
+        <a href="about.html" style="text-decoration: none;"><p id="about">About this Platform</p></a>
+        <a href="https://antievictionmap.com" target="_blank"><p id="aemp">AEMP</p></a>
+    </div>
+    <div id="intro">
+
+        <div id="findings-content">
+            <h1>Findings</h1>
+            <h3><em>Note: Total unit counts may not capture all properties in San Francisco, as rows with missing property address, mailing address, or unit count data were filtered out. </em></h3>
+            <h2>Number of Units by Owner Type</h2>
+            <p>The majority of units are held by Individual owners, holding <strong><em>46%</em></strong> of residential housing units.</p>
+            <p>Corporate and Real Estate Trust land owners, together, hold roughly <strong><em>53%</em></strong> of residential housing units in San Francisco.</p>
+            <canvas id="owner-type" style="width: 300px; height: 400px; "></canvas>
+            <h2>Number of Units by Owner Location</h2>
+            <p><strong><em>75%</em></strong> of residential housing units are held by owners who have a mailing address in San Francisco.</p>
+            <canvas id="owner-location" style="width: 300px; height: 400px; "></canvas>
+            <h2>Number of Units by Owner Size</h2>
+            <p>Owners with large-sized portfolios hold <strong><em>50%</em></strong> of residential housing units in San Francisco.</p>
+            <p>Small-sized owners, with network sizes between 1 to 4 units, hold <strong><em>43%</em></strong> of residential housing units. Medium-sized owners, with network sizes between 5 to 14 units, hold <strong><em>7%</em></strong> of residential housing units.</p> 
+            <canvas id="owner-size" style="width: 300px; height: 400px; "></canvas>
+            <h2>Breakdown of Units by Owner Location and Type</h2>
+            <p>Across each owner type, the majority of owners reside in San Francisco. Individual, Real Estate Trust, and Corporate owners based in SF hold <strong><em>80%</em></strong>, <strong><em>73%</em></strong>, and <strong><em>67%</em></strong> of the residential units respectively.</p>
+            <canvas id="owner-location-by-type" style="width: 300px; height: 400px; "></canvas>
+            <h2>Breakdown of Units by Owner Size and Type</h2>
+            <p>Corporate owners tend to be large-sized owners.</p>
+            <p>Individual owners are made up of <strong><em>57%</em></strong> small-sized owners, 7% medium-sized owners, and <strong><em>36%</em></strong> large-sized owners. Trust owners are made up of <strong><em>56%</em></strong> small-sized owners, 12% medium-sized owners, and <strong><em>32%</em></strong> large sized owners. Corporate owners are made up of 5% small-sized owners, 6% medium-sized owners, and <strong><em>89%</em></strong> large-sized owners.</p>
+            <canvas id="owner-size-by-type" style="width: 300px; height: 500px; "></canvas>
+            <br><br><br>        <br><br><br>
+
+
+
+
+
+        </div>
+    </div>
+
+    </div>
+
+</body>
+<script>
+
+    const barchart1 = document.getElementById('owner-type').getContext('2d');
+    const barchart2 = document.getElementById('owner-location').getContext('2d');
+    const barchart3 = document.getElementById('owner-size').getContext('2d');
+    const barchart4 = document.getElementById('owner-location-by-type').getContext('2d');
+    const barchart5 = document.getElementById('owner-size-by-type').getContext('2d');
+    
+    
+    
+    
+       const ownertypechart = new Chart(barchart1, {
+      type: 'bar',
+      data: {
+        labels: ['Individual','Real Estate Trust', 'Corporate', 'Public'],
+        datasets: [{
+          backgroundColor: ['pink', 'green', 'blue', 'yellow'],
+          borderColor: ['gray'],
+          data: [189213, 109043, 105506, 4695]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Type'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownerlocationchart = new Chart(barchart2, {
+      type: 'bar',
+      data: {
+        labels: ['In SF', 'Out of SF'],
+        datasets: [{
+          backgroundColor: [  pattern.draw('diagonal', 'gray'),
+                                pattern.draw('cross', 'gray')],
+          borderColor: ['black'],
+          borderWidth: 1,
+          data: [303339, 102059]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Location'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownersizechart = new Chart(barchart3, {
+      type: 'bar',
+      data: {
+        labels: ['Small (1-4 units)', 'Medium (5-14 units)', 'Large (>15 units)'],
+        datasets: [{
+          backgroundColor: [  pattern.draw('zigzag-horizontal', 'gray'),
+                                pattern.draw('dash', 'gray'),
+                                pattern.draw('dot', 'gray')],
+          borderColor: ['black'],
+          borderWidth: 1,
+          data: [174440, 31282, 202735 ]
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+        scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Units'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Owner Size'
+                        }
+                    }
+                }
+      }
+    });
+    
+    const ownerlocationtypechart = new Chart(barchart4, {
+      type: 'bar',
+      data: {
+        labels: ['Individual', 'Real Estate Trust', 'Corporate'],
+        datasets: [
+        {
+            label: 'In SF',
+            backgroundColor: [
+              pattern.draw('diagonal', 'pink'),
+              pattern.draw('diagonal', 'green'),
+              pattern.draw('diagonal', 'blue')
+            ],
+            data: [150213, 79172, 69760]
+          },
+          {
+            label: 'Out of SF',
+            backgroundColor: [
+              pattern.draw('cross', 'pink'),
+              pattern.draw('cross', 'green'),
+              pattern.draw('cross', 'blue')
+            ],
+            data: [37178, 28735, 34648]
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Owner Location'
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Units'
+            }
+          }
+        }
+      }
+    });
+    
+    
+    const ownersizetypechart = new Chart(barchart5, {
+      type: 'bar',
+      data: {
+        labels: ['Individual', 'Real Estate Trust', 'Corporate'],
+        datasets: [
+          {
+            label: 'Small (1-4 units)',
+            backgroundColor: [
+              pattern.draw('zigzag-horizontal', 'pink'),
+              pattern.draw('zigzag-horizontal', 'green'),
+              pattern.draw('zigzag-horizontal', 'blue')
+            ],
+            data: [107498, 60982, 5954]
+          },
+          {
+            label: 'Medium (5-14 units)',
+            backgroundColor: [
+              pattern.draw('dash', 'pink'),
+              pattern.draw('dash', 'green'),
+              pattern.draw('dash', 'blue')
+            ],
+            data: [12698, 12531, 6054]
+          },
+          {
+            label: 'Large (>15 units)',
+            backgroundColor: [
+              pattern.draw('dot', 'pink'),
+              pattern.draw('dot', 'green'),
+              pattern.draw('dot', 'blue')
+            ],
+            data: [69018, 35330, 93497]
+          }
+        ]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
+        },
+        scales: {
+          x: {
+            stacked: true,
+            title: {
+              display: true,
+              text: 'Owner Type'
+            }
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Number of Units'
+            }
+          }
+        }
+      }
+    });
+    
+    
+    </script>
+</html>
+
+
+
